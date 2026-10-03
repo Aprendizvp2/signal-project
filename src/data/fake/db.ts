@@ -4,7 +4,7 @@ export const db = {
     users: {
         'u-c': { id: 'u-c', name: 'Coordinator Demo', role: 'coordinator' } as UserDTO,
         'u-p': { id: 'u-p', name: 'Participant Demo', role: 'participant' } as UserDTO,
-    },
+    } as Record<string, UserDTO>,
     channels: {} as Record<string, ChannelDTO>,
     notes: {} as Record<string, NoteDTO>,
     idempotency: {} as Record<string, string>, // key -> noteId

@@ -18,15 +18,17 @@ export const RootNavigator = () => {
   const user = useSelector((s: RootState) => s.session.user);
 
   return (
-    <Stack.Navigator>
-      {user == null ? (
-        <Stack.Screen name="Login" component={LoginScreen} options={{ title: 'Signal' }} />
-      ) : (
-        <>
-          <Stack.Screen name="Channel" component={ChannelScreen} options={{ title: 'Canal' }} />
-          <Stack.Screen name="NoteDetail" component={NoteDetailScreen} options={{ title: 'Nota' }} />
-        </>
-      )}
+    <Stack.Navigator
+      screenOptions={{ headerShown: false }}
+      initialRouteName={user ? 'Channel' : 'Login'}
+    >
+      <Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Screen
+        name="Channel"
+        component={ChannelScreen}
+        initialParams={{ channelId: 'c-1' }}
+      />
+      <Stack.Screen name="NoteDetail" component={NoteDetailScreen} />
     </Stack.Navigator>
   );
 };
