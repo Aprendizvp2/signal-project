@@ -5,6 +5,18 @@ import { NavigationContainer } from '@react-navigation/native';
 import { store } from './src/app/store';
 import { RootNavigator } from './src/navigation/RootNavigator';
 import { linking } from './src/navigation/linking';
+import { setAuthToken, setUnauthorizedHandler } from './src/data/api/client';
+import { setUnauthorized } from './src/presentation/session/sessionSlice';
+
+// cuando cambia el token
+store.subscribe(() => {
+  setAuthToken(store.getState().session.token);
+});
+
+// cuando el back devuelve 401
+setUnauthorizedHandler(() => {
+  store.dispatch(setUnauthorized());
+});
 
 export default function App() {
   return (
