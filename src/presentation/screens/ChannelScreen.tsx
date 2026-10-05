@@ -14,6 +14,7 @@ import type { Note } from '../../domain/models';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { RootStackParamList } from '../../navigation/RootNavigator';
 import { notificationService } from '../../services/notifications/NotificationService';
+import { CustomButton } from '../components/CustomButton/CustomButton';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Channel'>;
 
@@ -77,6 +78,9 @@ export const ChannelScreen = ({ route, navigation }: Props) => {
     );
   };
 
+  const onClickNavigateChanelId = () => navigation.navigate('Composer', { channelId })
+  const onClickLogOut = () => dispatch(logoutThunk())
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -135,22 +139,11 @@ export const ChannelScreen = ({ route, navigation }: Props) => {
       />
 
       <View style={styles.actions}>
-        <Button
-          title="Nueva nota"
-          onPress={() => navigation.navigate('Composer', { channelId })}
-        />
+        <CustomButton variant='primary' title='Nueva nota' onPress={onClickNavigateChanelId} />
         {canSendPriority(me.role) && (
-          <Button
-            title="🔔 Simular Priority entrante"
-            color="#c00"
-            onPress={simulatePriority}
-          />
+          <CustomButton variant='secondary' title="🔔 Simular Priority entrante" onPress={simulatePriority} />
         )}
-        <Button
-          title="Cerrar sesión"
-          color="#a00"
-          onPress={() => dispatch(logoutThunk())}
-        />
+        <CustomButton variant='danger' title='Cerrar sesión' onPress={onClickLogOut} />
       </View>
     </SafeAreaView>
   );

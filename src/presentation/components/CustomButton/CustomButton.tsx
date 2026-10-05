@@ -25,7 +25,7 @@ export const CustomButton = ({
   variant = 'primary',
   loading = false,
   disabled = false,
-  style,
+  style
 }: Props) => {
   const isDisabled = disabled || loading;
   return (

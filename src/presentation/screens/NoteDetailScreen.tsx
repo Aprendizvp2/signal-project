@@ -11,6 +11,7 @@ import type { RootState, AppDispatch } from '../../app/store';
 import { sendNote, loadNotes } from '../notes/notesSlice';
 import { loadChannel } from '../channel/channelSlice';
 import type { Note } from '../../domain/models';
+import { CustomBackButton } from '../components/CustomBackButton/CustomBackButton';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'NoteDetail'>;
 
@@ -108,8 +109,11 @@ export const NoteDetailScreen = ({ route, navigation }: Props) => {
     };
 
     return (
-        <SafeAreaView style={{ flex: 1, padding: 16 }}>
-            <ScrollView contentContainerStyle={styles.container}>
+        <SafeAreaView style={styles.container}>
+            <View style={styles.backButton}>
+                <CustomBackButton onPress={() => navigation.goBack()} />
+            </View>
+            <ScrollView>
                 <View style={styles.headerRow}>
                     <Text style={styles.kind}>
                         {note.kind === 'priority' ? '🔴 PRIORITY' : 'STANDARD'}
@@ -227,7 +231,14 @@ export const NoteDetailScreen = ({ route, navigation }: Props) => {
 };
 
 const styles = StyleSheet.create({
-    container: { padding: 16, gap: 12 },
+    backButton: {
+        paddingHorizontal: 16,
+        paddingTop: 4,
+        paddingBottom: 8,
+        borderBottomWidth: StyleSheet.hairlineWidth,
+        borderBottomColor: '#eee',
+    },
+    container: { flex: 1, padding: 16 },
     center: { flex: 1, justifyContent: 'center', alignItems: 'center', gap: 12 },
     empty: { fontSize: 16, color: '#888' },
     headerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },

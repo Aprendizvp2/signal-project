@@ -1,4 +1,3 @@
-// LoginScreen.tsx
 import React from 'react';
 import { View, Text, StyleSheet, Pressable, ActivityIndicator } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
@@ -6,6 +5,8 @@ import { AppDispatch, RootState } from '../../app/store';
 import { loginDemo } from '../session/sessionSlice';
 import { RootStackParamList } from '../../navigation/RootNavigator';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { CustomButton } from '../components/CustomButton/CustomButton';
+import { CustomText } from '../components/CustomText/CustomText';
 
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
@@ -25,15 +26,11 @@ export const LoginScreen = ({ navigation }: Props) => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Welcome to Signal</Text>
+            <CustomText style={styles.title} text="Welcome to Signal" />
             {loading && <ActivityIndicator style={{ marginVertical: 12 }} />}
             {error && <Text style={styles.err}>{error}</Text>}
-            <Pressable style={styles.buttonCoordinator} onPress={() => onLogin('coordinator')}>
-                <Text style={styles.buttonText}>Coordinator</Text>
-            </Pressable>
-            <Pressable style={styles.buttonParticipant} onPress={() => onLogin('participant')}>
-                <Text style={styles.buttonText}>Participant</Text>
-            </Pressable>
+            <CustomButton variant='primary' title='Coordinator' onPress={() => onLogin('coordinator')} />
+            <CustomButton variant='secondary' title='Participant' onPress={() => onLogin('participant')} />
         </View>
     );
 };
@@ -51,22 +48,6 @@ const styles = StyleSheet.create({
         marginVertical: 12,
         fontWeight: 'bold',
         textAlign: 'center',
-    },
-    buttonCoordinator: {
-        backgroundColor: '#0057F0',
-        padding: 12,
-        borderRadius: 8,
-    },
-    buttonText: {
-        color: '#FFF',
-        fontSize: 16,
-        fontWeight: 'bold',
-        textAlign: 'center',
-    },
-    buttonParticipant: {
-        backgroundColor: '#6A717D',
-        padding: 12,
-        borderRadius: 8,
     },
     err: {
         color: "red"

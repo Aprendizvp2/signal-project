@@ -5,12 +5,12 @@ type Variant = 'title' | 'subtitle' | 'body' | 'caption' | 'error';
 
 interface Props extends TextProps {
   variant?: Variant;
-  children: React.ReactNode;
+  text: React.ReactNode;
 }
 
-export const CustomText = ({ variant = 'body', style, children, ...rest }: Props) => (
+export const CustomText = ({ variant = 'body', style, text, ...rest }: Props) => (
   <Text style={[styles.base, styles[variant], style]} {...rest}>
-    {children}
+    {text}
   </Text>
 );
 
