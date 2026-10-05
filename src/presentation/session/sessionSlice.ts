@@ -2,14 +2,16 @@ import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import type { User } from '../../domain/models';
 import { sessionRepository } from '../../data/repositories/SessionRepository';
 
+
 interface State {
   user: User | null;
   token: string | null;
   loading: boolean;
   hydrating: boolean;
   error: string | null;
+  pendingDeepLink: string | null;
 }
-const initial: State = { user: null, token: null, loading: false, hydrating: true, error: null };
+const initial: State = { user: null, token: null, loading: false, hydrating: true, error: null, pendingDeepLink: null };
 
 export const loginDemo = createAsyncThunk(
   'session/loginDemo',
@@ -30,6 +32,9 @@ const slice = createSlice({
   initialState: initial,
   reducers: {
     setUnauthorized: s => { s.user = null; s.token = null; s.error = 'Sesión expirada'; },
+    setPendingDeepLink: (s, a: PayloadAction<string | null>) => {
+      s.pendingDeepLink = a.payload;
+    },
   },
   extraReducers: b => {
     b.addCase(loginDemo.pending, s => { s.loading = true; s.error = null; });
@@ -43,6 +48,7 @@ const slice = createSlice({
     b.addCase(restoreSession.fulfilled, (s, a) => {
       s.hydrating = false;
       if (a.payload) { s.user = a.payload.user; s.token = a.payload.token; }
+      s.pendingDeepLink = null;
     });
     b.addCase(restoreSession.rejected, s => { s.hydrating = false; });
 
@@ -52,5 +58,5 @@ const slice = createSlice({
   },
 });
 
-export const { setUnauthorized } = slice.actions;
+export const { setUnauthorized, setPendingDeepLink } = slice.actions;
 export const sessionReducer = slice.reducer;

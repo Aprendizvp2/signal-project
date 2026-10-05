@@ -23,10 +23,9 @@ export const fakeApi = {
         return ch;
     },
 
-    async createNote(dto: CreateNoteDTO, idempotencyKey: string): Promise<NoteDTO> {
+    async createNote(dto: CreateNoteDTO, idempotencyKey: string, actorRole: 'coordinator' | 'participant' = 'coordinator'): Promise<NoteDTO> {
         await delay(400);
 
-        // idempotencia
         if (db.idempotency[idempotencyKey]) {
             return db.notes[db.idempotency[idempotencyKey]];
         }
@@ -34,19 +33,14 @@ export const fakeApi = {
         const ch = db.channels[dto.channelId];
         if (!ch) throw new AppError('not_found', 'Channel no existe', 404);
 
-        const author = Object.values(db.users).find(u => u.id === dto.recipientId || u.id === 'u-c');
-        // validación de permiso — la regla dura
-        const authorRole = dto.kind === 'priority' && !canSendPriority('coordinator')
-            ? 'participant' : 'coordinator';
-
-        if (dto.kind === 'priority' && authorRole === 'participant') {
+        if (dto.kind === 'priority' && !canSendPriority(actorRole)) {
             throw new AppError('forbidden', 'Priority solo para Coordinator', 403);
         }
 
         const note: NoteDTO = {
             id: uid(),
             channelId: dto.channelId,
-            authorId: 'u-c',
+            authorId: actorRole === 'coordinator' ? 'u-c' : 'u-p',
             recipientId: dto.recipientId,
             kind: dto.kind,
             status: 'QUEUED',
@@ -59,9 +53,9 @@ export const fakeApi = {
         db.notes[note.id] = note;
         db.idempotency[idempotencyKey] = note.id;
 
-        // simular transición de estados
         setTimeout(() => { note.status = 'DISPATCHED'; }, 1000);
         setTimeout(() => { note.status = 'DELIVERED'; }, 2000);
+        setTimeout(() => { note.status = 'OPENED'; }, 3500);
 
         return note;
     },
@@ -98,5 +92,5 @@ export const fakeApi = {
         const user = db.users[userId];
         if (!user) throw new AppError('auth', 'Token inválido', 401);
         return user;
-    },
+    }
 };

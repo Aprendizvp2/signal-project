@@ -2,13 +2,14 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../app/store';
-import { NoteDetailScreen } from '../presentation/screens/NoteDetailScreen';
 import { LoginScreen } from '../presentation/screens/LoginScreen';
+import { NoteDetailScreen } from '../presentation/screens/NoteDetailScreen';
+import { ComposerScreen } from '../presentation/screens/ComposerScreen';
 import { ChannelScreen } from '../presentation/screens/ChannelScreen';
-
 export type RootStackParamList = {
   Login: undefined;
   Channel: { channelId: string };
+  Composer: { channelId: string };  
   NoteDetail: { channelId: string; noteId: string };
 };
 
@@ -29,6 +30,7 @@ export const RootNavigator = () => {
         initialParams={{ channelId: 'c-1' }}
       />
       <Stack.Screen name="NoteDetail" component={NoteDetailScreen} />
+      <Stack.Screen name="Composer" component={ComposerScreen} />
     </Stack.Navigator>
   );
 };
